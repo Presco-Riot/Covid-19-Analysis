@@ -45,20 +45,11 @@ GROUP BY location, population
 HAVING MAX((CAST(total_cases AS NUMERIC) /population)) * 100 IS NOT NULL 
 ORDER BY infected_population_percentage DESC;
 
--- 8. Continents with the Highest Death Count per Population
-SELECT continent, MAX(total_deaths) AS total_death_count
+-- 8. Continents with the total number of cases, total deaths and overall death percentage
+SELECT continent, SUM(new_cases) AS total_new_cases, SUM(new_deaths) AS total_new_death, (SUM(CAST(new_deaths AS NUMERIC)) / SUM(CAST(new_cases AS NUMERIC))) * 100 AS death_percentage
 FROM coviddeaths
-WHERE continent IS NOT NULL  
-GROUP BY continent
-ORDER BY total_death_count DESC;
-
-
-
--- . 
-SELECT SUM(new_cases) AS total_new_cases, SUM(new_deaths) AS total_new_death, (SUM(CAST(new_deaths AS NUMERIC)) / SUM(CAST(new_cases AS NUMERIC))) * 100 AS death_percentage
-FROM coviddeaths
-WHERE continent IS NOT NULL;
---GROUP BY date
+WHERE continent IS NOT NULL
+GROUP BY continent;
 
 
 --- III) Total Population vs Vaccinations
@@ -115,4 +106,7 @@ FROM tests_2020 AS t0
 JOIN tests_2021 AS t1 ON t0.continent = t1.continent
 JOIN tests_2022 AS t2 ON t0.continent = t2.continent
 JOIN tests_2023 AS t3 ON t0.continent = t3.continent
+
+
+
 
